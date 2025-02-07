@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/github/license/JRamonHA/Explorador-Meteorologico?style=flat-square)](https://github.com/JRamonHA/Explorador-Meteorologico/blob/main/LICENSE)
+
 # Explorador Meteorológico
 
 **Explorador Meteorológico** es una web app diseñada para el análisis y visualización de datos de RUOA y ESOLMET.  
