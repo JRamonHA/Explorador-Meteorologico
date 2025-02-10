@@ -15,12 +15,12 @@ El proyecto se desarrolla utilizando [Shiny for Python](https://shiny.posit.co/p
 - [config/](config/)
   - [config.py](config/config.py) - Variables globales, configuración de la app, etc.
 - [data/](data/)
-  - [raw/](data/raw/) - Datos sin procesar
-  - [processed/](data/processed/) - Datos procesados listos para usar en la app
+  - [raw/](data/001_raw/) - Datos sin procesar
+  - [intermediate/](data/002_intermediate/) - Datos en nivel intermedio de procesamiento
+  - [processed/](data/003_processed/) - Datos procesados listos para usar en la app
 - [img/](img/) - Imágenes, gráficos y recursos visuales
 - [scripts/](scripts/) - Scripts para análisis exploratorio, pruebas y desarrollo interactivo
-- [src/](src/)
-  - [app.py](src/app.py) - Archivo principal que inicia la aplicación Shiny para Python
-  - [components/](src/components/) - Componentes o módulos reutilizables de la app (widgets, layouts, etc.)
-  - [utils/](src/utils/) - Funciones y utilidades generales (p.ej., manejo de base de datos, validaciones, etc.)
+- [app.py](app.py) - Archivo principal que inicia la aplicación Shiny para Python
+- [components/](components/) - Componentes o módulos reutilizables de la app (widgets, layouts, etc.)
+- [utils/](utils/) - Funciones y utilidades generales (p.ej., manejo de base de datos, validaciones, etc.)
 - [tests/](tests/) - Pruebas unitarias e integradas
