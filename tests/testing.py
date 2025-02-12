@@ -2,6 +2,15 @@ import pandas as pd
 import glob
 
 def compare_file_columns(path, extension):
+    """
+    Esta función lee todos los archivos con una extensión específica en el directorio dado,
+    y compara las columnas de cada archivo con las del primer archivo leído, que se usa como referencia.
+    Args:
+        path (str): Ruta del directorio que contiene los archivos CSV.
+        extension (str): Extensión de los archivos a leer (por ejemplo, 'csv').
+    Returns:
+        None: La función imprime los resultados de la comparación de columnas en la consola.
+    """
     # Obtiene todos los archivos con la extensión indicada en el directorio especificado
     files = glob.glob(f'{path}/*.{extension}')
     
