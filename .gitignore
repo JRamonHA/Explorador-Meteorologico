@@ -1,3 +1,6 @@
+# Ignorar configuración de Visual Studio
+.vscode/
+
 # Ignorar entornos virtuales
 .venv/
 
