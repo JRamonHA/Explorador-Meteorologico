@@ -1,3 +1,6 @@
+ipykernel
 pandas
+numpy
+matplotlib
 plotly
 shiny

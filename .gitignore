@@ -2,7 +2,7 @@
 .vscode/
 
 # Ignorar entornos virtuales
-.venv/
+venv/
 
 # Ignorar directorios de caché de Python
 __pycache__/
