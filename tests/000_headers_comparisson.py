@@ -3,7 +3,7 @@ import glob
 
 def compare_file_columns(path, extension):
     """
-    Esta función lee todos los archivos con una extensión específica en el directorio dado,
+    Lee todos los archivos con una extensión específica en el directorio dado,
     y compara las columnas de cada archivo con las del primer archivo leído, que se usa como referencia.
     Args:
         path (str): Ruta del directorio que contiene los archivos CSV.
