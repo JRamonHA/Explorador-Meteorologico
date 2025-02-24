@@ -1,3 +1,4 @@
+# %%
 import pandas as pd
 
 def check_column_type(columns_expected_type, data):
