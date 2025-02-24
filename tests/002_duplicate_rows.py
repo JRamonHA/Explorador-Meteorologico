@@ -1,15 +1,5 @@
 import pandas as pd
 
-# Archivo de prueba que sé que tiene filas duplicadas
-f = '../data/001_raw/windsensor.csv'
-data = pd.read_csv(
-    f, 
-    # skiprows=[0, 2, 3], 
-    index_col=0, 
-    parse_dates=True, 
-    # dayfirst=True
-    )
-
 def check_duplicate_rows(data):
     """
     Verifica si hay filas duplicadas en un DataFrame basado en sus índices.
@@ -28,5 +18,15 @@ def check_duplicate_rows(data):
         duplicated_rows = data.loc[duplicated_indexes]
         print("\nFilas duplicadas:")
         print(duplicated_rows.to_string())
+
+# Archivo de prueba que sé que tiene filas duplicadas
+f = '../data/001_raw/windsensor.csv'
+data = pd.read_csv(
+    f, 
+    # skiprows=[0, 2, 3], 
+    index_col=0, 
+    parse_dates=True, 
+    # dayfirst=True
+    )
 
 check_duplicate_rows(data)
