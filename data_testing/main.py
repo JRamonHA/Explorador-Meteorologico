@@ -1,8 +1,16 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict
 import pandas as pd
 import glob
 
 def import_data(f: str, encoding: str = "utf-8") -> Tuple[Optional[pd.DataFrame], bool]:
+    """
+    Imports data from a CSV file, skipping specific rows and parsing dates.
+    Args:
+        f (str): The file path to the CSV file.
+        encoding (str, optional): The encoding of the CSV file. Defaults to "utf-8".
+    Returns:
+        Tuple[Optional[pd.DataFrame], bool]: A tuple containing the DataFrame with the imported data (or None if an error occurred) and a boolean indicating if the encoding was correct.
+    """
     try:
         data = pd.read_csv(
             f,
@@ -23,7 +31,13 @@ def import_data(f: str, encoding: str = "utf-8") -> Tuple[Optional[pd.DataFrame]
 
 
 def detect_endswith(filepath):
-    """Detecta el tipo de archivo basándose en su extensión y contenido."""
+    """
+    Detects the type of file based on its extension.
+    Parameters:
+        filepath (str): The path to the file to be checked.
+    Returns:
+        bool: True if the file ends with '.csv', False otherwise.
+    """
     if filepath.endswith('.csv'):
         tag_endswith = True
     else:
@@ -34,6 +48,13 @@ def detect_endswith(filepath):
 
 
 def detect_nans(df : pd.DataFrame) -> bool:
+    """
+    Detects if a DataFrame contains any NaN values.
+    Parameters:
+        df (pd.DataFrame): The DataFrame to check for NaN values.
+    Returns:
+        bool: True if there are no NaN values in the DataFrame, False otherwise.
+    """
     if df.isnull().sum().sum() == 0:
         tag_nans = True
     else:
@@ -42,17 +63,65 @@ def detect_nans(df : pd.DataFrame) -> bool:
     return tag_nans
 
 
-def compare(path, extension):
+def detect_duplicates(df: pd.DataFrame) -> bool:
     """
-    Lee todos los archivos con una extensión específica en el directorio dado,
-    y compara las columnas de cada archivo con las del primer archivo leído, que se usa como referencia.
+    Checks if a DataFrame contains duplicate rows based on its index.
     
-    Args:
-        path (str): Ruta del directorio que contiene los archivos CSV.
-        extension (str): Extensión de los archivos a leer (por ejemplo, 'csv').
+    Parameters:
+        df (pd.DataFrame): The DataFrame to check for duplicate rows.
     
     Returns:
-        None: La función imprime los resultados de la comparación de columnas en la consola.
+        bool: True if there are no duplicate rows; False if duplicate rows exist.
+    """
+    if df.index.duplicated().any():
+        tag_duplicates = False
+    else:
+        tag_duplicates = True
+
+    return tag_duplicates
+
+
+def detect_dtype(columns_expected_type: Dict[str, str], data: pd.DataFrame) -> bool:
+    """
+    Verifies that the data types of the DataFrame columns match the expected types.
+    
+    Parameters:
+        columns_expected_type (Dict[str, str]): A dictionary where the keys are the column names and the values 
+                                                  are the expected data types (as strings).
+        data (pd.DataFrame): The DataFrame containing the data to verify.
+    
+    Returns:
+        bool: True if all column types match the expected types; False if any mismatch is found.
+    """
+    for col in columns_expected_type:
+        if col not in data.columns:
+            raise KeyError(f"Column '{col}' does not exist in the DataFrame.")
+
+    columns_types = {col: str(data[col].dtype) for col in data.columns}
+
+    tag_dtypes = True
+
+    for col in set(columns_expected_type.keys()).union(columns_types.keys()):
+        expected = columns_expected_type.get(col)
+        obtained = columns_types.get(col)
+        if expected != obtained:
+            tag_dtypes = False
+            break
+
+    return tag_dtypes
+
+
+def compare(path, extension):
+    """
+    Reads all files with a specific extension in the given directory,
+    and compares the columns of each file with those of the first file read, which is used as a reference.
+    
+    Args:
+        path (str): Path to the directory containing the CSV files.
+        extension (str): Extension of the files to read (e.g., 'csv').
+    
+    Returns:
+        None: The function prints the results of the column comparison to the console.
     """
     # Obtiene todos los archivos con la extensión indicada en el directorio especificado
     files = glob.glob(f'{path}/*.{extension}')
@@ -92,47 +161,3 @@ def compare(path, extension):
                 print(f"{file} coincide con la referencia.")
             else:
                 print(f"{file} no coincide con la referencia.")
-
-
-def column_type(columns_expected_type, data):
-    """
-    Verifica que los tipos de datos de las columnas en un DataFrame coincidan con los tipos esperados.
-    
-    Args:
-        columns_expected_type (dict): Un diccionario donde las claves son los nombres de las columnas,
-                                      y los valores son los tipos de datos esperados como cadenas de texto.
-        data (pandas.DataFrame): El DataFrame que contiene los datos a verificar.
-    
-    Returns:
-        None: La función imprime un mensaje si hay discrepancias entre los tipos esperados y los obtenidos.
-    """
-    columns_obtained_type = {columna: f'{data[columna].dtype}' for columna in data.columns}
-
-    for key in set(columns_expected_type.keys()).union(columns_obtained_type.keys()):
-        expected = columns_expected_type.get(key, None)
-        obtained = columns_obtained_type.get(key, None)
-        
-        if expected != obtained:
-            print(f"En la columna '{key}' se espera: {expected}\nPero se obtuvo: {obtained}")
-
-
-def duplicate_rows(data):
-    """
-    Verifica si hay filas duplicadas en un DataFrame basado en sus índices.
-    
-    Args:
-        data (pandas.DataFrame): El DataFrame a verificar.
-    
-    Returns:
-        None: Si hay filas duplicadas, imprime los índices duplicados y las filas correspondientes.
-    """
-    if data.index.duplicated().any():
-        # Obtiene todos los índices duplicados (incluye todas las ocurrencias)
-        duplicated_indexes = data.index[data.index.duplicated(keep=False)]
-        print("Índices duplicados:")
-        print(duplicated_indexes.unique())
-        
-        # Muestra todas las filas cuyos índices están duplicados
-        duplicated_rows = data.loc[duplicated_indexes]
-        print("\nFilas duplicadas:")
-        print(duplicated_rows.to_string())
